@@ -38,4 +38,17 @@ program
     }
   });
 
+// Add default action when no command is provided
+program.action(async () => {
+  console.log("Starting beeai-a2a-proxy with default settings...");
+  console.log("Use 'beeai-a2a-proxy start --help' for more options");
+
+  try {
+    await startProxy(3000, "http://localhost:10001", true);
+  } catch (error) {
+    console.error("Failed to start proxy server:", error);
+    process.exit(1);
+  }
+});
+
 program.parse();
