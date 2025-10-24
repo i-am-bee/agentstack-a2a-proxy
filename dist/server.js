@@ -8,7 +8,7 @@ const express_1 = __importDefault(require("express"));
 const http_proxy_middleware_1 = require("http-proxy-middleware");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 // Identity function for JSON modification (returns original data)
-function identityFunction(data, port) {
+function identityFunction(config, data, port) {
     return {
         ...data,
         capabilities: {
@@ -23,7 +23,13 @@ function identityFunction(data, port) {
                         contributors: [],
                         framework: null,
                         interaction_mode: "multi-turn",
-                        variables: null,
+                        variables: [
+                            ...config.requiredVariables.map((variable) => ({
+                                name: variable,
+                                description: variable,
+                                required: true,
+                            })),
+                        ],
                     },
                 },
             ],
@@ -31,33 +37,8 @@ function identityFunction(data, port) {
         url: `http://localhost:${port}/`,
     };
 }
-// Function to register this server
-async function registerServer(port) {
-    try {
-        const serverLocation = `http://localhost:${port}`;
-        console.log(`Registering server at: ${serverLocation}`);
-        const response = await (0, node_fetch_1.default)("http://127.0.0.1:8333/api/v1/providers?auto_remove=true", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                location: serverLocation,
-            }),
-        });
-        if (response.ok) {
-            console.log("Server registered successfully");
-        }
-        else {
-            console.error("Failed to register server:", response.status, response.statusText);
-        }
-    }
-    catch (error) {
-        console.error("Error registering server:", error);
-    }
-}
 // Main function to start the proxy server
-async function startProxy(port, targetUrl, shouldRegister = true) {
+async function startProxy(port, targetUrl, config) {
     const app = (0, express_1.default)();
     // Middleware for parsing JSON
     app.use(express_1.default.json());
@@ -83,7 +64,7 @@ async function startProxy(port, targetUrl, shouldRegister = true) {
             // Parse the JSON response
             const originalData = await response.json();
             // Apply identity function (modify this function to change the JSON)
-            const modifiedData = identityFunction(originalData, port);
+            const modifiedData = identityFunction(config, originalData, port);
             // Return the modified JSON
             res.json(modifiedData);
         }
@@ -93,7 +74,6 @@ async function startProxy(port, targetUrl, shouldRegister = true) {
             res.status(500).json({ error: "Internal server error" });
         }
     });
-    // Proxy all other requests to the target backend
     app.use("/", (0, http_proxy_middleware_1.createProxyMiddleware)({
         target: targetUrl,
         changeOrigin: true,
@@ -102,16 +82,11 @@ async function startProxy(port, targetUrl, shouldRegister = true) {
             res.status(500).json({ error: "Proxy error" });
         },
     }));
-    // Start the server
     return new Promise((resolve, reject) => {
         const server = app.listen(port, async () => {
             console.log(`Proxy server running on port ${port}`);
             console.log(`Proxying requests to: ${targetUrl}`);
             console.log(`Intercepting: /.well-known/agent-card.json`);
-            // Register the server after it starts (if enabled)
-            if (shouldRegister) {
-                await registerServer(port);
-            }
             resolve();
         });
         server.on("error", (error) => {

@@ -16,16 +16,15 @@ program
   .command("start")
   .description("Start the proxy server")
   .option("-p, --port <port>", "Port to run the proxy server on", "3000")
+  .option("-r, --required-variables <variables...>", "Required variables", [])
   .option(
     "-t, --target <url>",
     "Target URL to proxy to",
     "http://localhost:10001"
   )
-  .option("--no-register", "Skip auto-registration with the provider API")
   .action(async (options) => {
     const port = parseInt(options.port);
     const targetUrl = options.target;
-    const shouldRegister = options.register;
 
     if (isNaN(port) || port < 1 || port > 65535) {
       console.error("Error: Port must be a number between 1 and 65535");
@@ -33,24 +32,13 @@ program
     }
 
     try {
-      await startProxy(port, targetUrl, shouldRegister);
+      await startProxy(port, targetUrl, {
+        requiredVariables: options.requiredVariables,
+      });
     } catch (error) {
       console.error("Failed to start proxy server:", error);
       process.exit(1);
     }
   });
-
-// Add default action when no command is provided
-program.action(async () => {
-  console.log("Starting beeai-a2a-proxy with default settings...");
-  console.log("Use 'beeai-a2a-proxy start --help' for more options");
-
-  try {
-    await startProxy(8000, "http://localhost:10001", true);
-  } catch (error) {
-    console.error("Failed to start proxy server:", error);
-    process.exit(1);
-  }
-});
 
 program.parse();

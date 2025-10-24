@@ -3,7 +3,7 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 import fetch from "node-fetch";
 
 // Identity function for JSON modification (returns original data)
-function identityFunction(data: any, port: number): any {
+function identityFunction(config: Config, data: any, port: number): any {
   return {
     ...data,
     capabilities: {
@@ -19,11 +19,11 @@ function identityFunction(data: any, port: number): any {
             framework: null,
             interaction_mode: "multi-turn",
             variables: [
-              {
-                name: "GOOGLE_API_KEY",
-                description: "Google API Key",
+              ...config.requiredVariables.map((variable) => ({
+                name: variable,
+                description: variable,
                 required: true,
-              },
+              })),
             ],
           },
         },
@@ -33,10 +33,15 @@ function identityFunction(data: any, port: number): any {
   };
 }
 
+interface Config {
+  requiredVariables: string[];
+}
+
 // Main function to start the proxy server
 export async function startProxy(
   port: number,
-  targetUrl: string
+  targetUrl: string,
+  config: Config
 ): Promise<void> {
   const app = express();
 
@@ -72,7 +77,7 @@ export async function startProxy(
       const originalData = await response.json();
 
       // Apply identity function (modify this function to change the JSON)
-      const modifiedData = identityFunction(originalData, port);
+      const modifiedData = identityFunction(config, originalData, port);
 
       // Return the modified JSON
       res.json(modifiedData);
