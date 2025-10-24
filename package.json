@@ -2,21 +2,21 @@
   "name": "beeai-a2a-proxy",
   "version": "0.0.1",
   "bin": {
-    "beeai-a2a-proxy": "src/cli.ts"
+    "beeai-a2a-proxy": "dist/cli.js"
   },
   "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
   "scripts": {
-    "build": "tsc",
-    "cli": "ts-node src/cli.ts",
-    "clean": "rm -rf dist"
+    "build": "tsc && chmod +x dist/cli.js",
+    "cli": "node dist/cli.js",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build"
   },
   "author": "",
   "dependencies": {
     "commander": "^14.0.1",
     "express": "^4.18.2",
     "http-proxy-middleware": "^2.0.6",
-    "node-fetch": "^2.7.0",
-    "ts-node": "^10.9.2"
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "@types/commander": "^2.12.5",
