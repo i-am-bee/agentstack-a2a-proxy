@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 
 import { Command } from "commander";
 import { startProxy } from "./server";
