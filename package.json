@@ -8,8 +8,7 @@
   "scripts": {
     "build": "tsc",
     "cli": "tsx src/cli.ts",
-    "clean": "rm -rf dist",
-    "postinstall": "tsc && chmod +x dist/cli.js"
+    "clean": "rm -rf dist"
   },
   "author": "",
   "dependencies": {
