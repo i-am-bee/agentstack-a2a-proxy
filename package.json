@@ -9,7 +9,7 @@
     "build": "tsc",
     "cli": "tsx src/cli.ts",
     "clean": "rm -rf dist",
-    "postinstall": "pnpm run build && chmod +x dist/cli.js"
+    "postinstall": "tsc && chmod +x dist/cli.js"
   },
   "author": "",
   "dependencies": {
