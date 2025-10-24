@@ -1,5 +1,7 @@
 #!/usr/bin/env tsx
 
+console.log("Starting beeai-a2a-proxy...");
+
 import { Command } from "commander";
 import { startProxy } from "./server";
 
