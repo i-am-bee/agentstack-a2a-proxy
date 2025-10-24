@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 
 console.log("Starting beeai-a2a-proxy...");
 
