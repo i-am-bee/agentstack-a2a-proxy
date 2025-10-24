@@ -18,7 +18,13 @@ function identityFunction(data: any, port: number): any {
             contributors: [],
             framework: null,
             interaction_mode: "multi-turn",
-            variables: null,
+            variables: [
+              {
+                name: "GOOGLE_API_KEY",
+                description: "Google API Key",
+                required: true,
+              },
+            ],
           },
         },
       ],
@@ -27,44 +33,10 @@ function identityFunction(data: any, port: number): any {
   };
 }
 
-// Function to register this server
-async function registerServer(port: number) {
-  try {
-    const serverLocation = `http://localhost:${port}`;
-    console.log(`Registering server at: ${serverLocation}`);
-
-    const response = await fetch(
-      "http://127.0.0.1:8333/api/v1/providers?auto_remove=true",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          location: serverLocation,
-        }),
-      }
-    );
-
-    if (response.ok) {
-      console.log("Server registered successfully");
-    } else {
-      console.error(
-        "Failed to register server:",
-        response.status,
-        response.statusText
-      );
-    }
-  } catch (error) {
-    console.error("Error registering server:", error);
-  }
-}
-
 // Main function to start the proxy server
 export async function startProxy(
   port: number,
-  targetUrl: string,
-  shouldRegister: boolean = true
+  targetUrl: string
 ): Promise<void> {
   const app = express();
 
@@ -111,7 +83,6 @@ export async function startProxy(
     }
   });
 
-  // Proxy all other requests to the target backend
   app.use(
     "/",
     createProxyMiddleware({
@@ -124,17 +95,11 @@ export async function startProxy(
     })
   );
 
-  // Start the server
   return new Promise((resolve, reject) => {
     const server = app.listen(port, async () => {
       console.log(`Proxy server running on port ${port}`);
       console.log(`Proxying requests to: ${targetUrl}`);
       console.log(`Intercepting: /.well-known/agent-card.json`);
-
-      // Register the server after it starts (if enabled)
-      if (shouldRegister) {
-        await registerServer(port);
-      }
 
       resolve();
     });
