@@ -1,13 +1,13 @@
 # BeeAI A2A Proxy
 
-A proxy server for BeeAI A2A (Agent-to-Agent) communication that intercepts and modifies agent card endpoints to enable seamless integration with the BeeAI platform. You can literally take existing A2A agent and plug it into BeeAI without changing code of your A2A agent.
+A proxy server for [BeeAI](https://docs.beeai.dev/introduction/welcome) A2A (Agent-to-Agent) communication that intercepts and modifies agent card endpoints to enable seamless integration with the BeeAI platform. You can literally take existing A2A agent and plug it into BeeAI without changing code of your A2A agent.
 
 ## Main Goal
 
 The primary purpose of this proxy is to create a bridge between any A2A client and the BeeAI platform by:
 
 - **Intercepting agent card requests**: The proxy captures `/.well-known/agent-card.json` requests from any A2A client
-- **Adding AgentDetail extension**: It automatically injects the necessary AgentDetail extension data that enables the agent to be used within the BeeAI ecosystem. The extension is populated with sensible defaults, but can be customized by providing a custom JSON file
+- **Adding AgentDetail extension**: It automatically injects the necessary [AgentDetail](https://docs.beeai.dev/build-agents/agent-details) extension data that enables the agent to be used within the BeeAI ecosystem. The extension is populated with sensible defaults, but can be customized by providing a custom JSON file
 - **Auto-registration**: The proxy automatically registers the modified agent with the BeeAI platform, making it immediately available for use
 
 This allows any A2A-compliant agent to seamlessly work with BeeAI without requiring modifications to the original agent implementation.
