@@ -1,66 +1,30 @@
 import express from "express";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import fetch from "node-fetch";
+import { CustomAgentDetail } from "./validations/custom-agent-detail-schema";
+import { CliInput } from "./validations/cli-config";
+import { registerToPlatform } from "./core/register-to-platform";
+import { interceptAgentCard } from "./core/intercept-agent-card";
 
-// Identity function for JSON modification (returns original data)
-function identityFunction(config: Config, data: any, port: number): any {
-  return {
-    ...data,
-    capabilities: {
-      ...data.capabilities,
-      extensions: [
-        {
-          uri: "https://a2a-extensions.beeai.dev/ui/agent-detail/v1",
-          required: false,
-          params: {
-            author: null,
-            container_image_url: null,
-            contributors: [],
-            framework: null,
-            interaction_mode: "multi-turn",
-            variables: [
-              ...config.requiredVariables.map((variable) => ({
-                name: variable,
-                description: variable,
-                required: true,
-              })),
-            ],
-          },
-        },
-      ],
-    },
-    url: `http://localhost:${port}/`,
-  };
-}
-
-interface Config {
-  requiredVariables: string[];
-}
-
-// Main function to start the proxy server
 export async function startProxy(
-  port: number,
-  targetUrl: string,
-  config: Config
+  input: Pick<CliInput, "autoRegister" | "port"> & {
+    platformUrl: string;
+    targetUrl: string;
+  } & Partial<{ customData: CustomAgentDetail }>
 ): Promise<void> {
   const app = express();
-
-  // Middleware for parsing JSON
   app.use(express.json());
 
-  // Intercept /.well-known/agent.json endpoint
   app.get("/.well-known/agent-card.json", async (req, res) => {
     try {
-      console.log("Intercepting /.well-known/agent-card.json request");
-
-      // Fetch the original response from target backend with timeout and retry
-      const targetEndpointUrl = `${targetUrl}${req.originalUrl}`;
-      console.log(`Fetching from: ${targetEndpointUrl}`);
+      console.debug("Intercepting /.well-known/agent-card.json request");
+      const targetEndpointUrl = `${input.targetUrl}${req.originalUrl}`;
+      console.debug(`Fetching from: ${targetEndpointUrl}`);
 
       const response = await fetch(targetEndpointUrl, {
-        timeout: 10000, // 10 second timeout
+        timeout: 10000,
         headers: {
-          Connection: "close", // Force new connection
+          Connection: "close",
         },
       });
 
@@ -73,17 +37,17 @@ export async function startProxy(
           .json({ error: "Failed to fetch from target" });
       }
 
-      // Parse the JSON response
       const originalData = await response.json();
+      const modifiedData = interceptAgentCard(
+        originalData,
+        input.port,
+        input.customData
+      );
 
-      // Apply identity function (modify this function to change the JSON)
-      const modifiedData = identityFunction(config, originalData, port);
-
-      // Return the modified JSON
       res.json(modifiedData);
     } catch (error) {
       console.error("Error processing /.well-known/agent.json:", error);
-      console.error("Target URL was:", `${targetUrl}${req.originalUrl}`);
+      console.error("Target URL was:", `${input.targetUrl}${req.originalUrl}`);
       res.status(500).json({ error: "Internal server error" });
     }
   });
@@ -91,7 +55,7 @@ export async function startProxy(
   app.use(
     "/",
     createProxyMiddleware({
-      target: targetUrl,
+      target: input.targetUrl,
       changeOrigin: true,
       onError: (err, req, res) => {
         console.error("Proxy error:", err);
@@ -101,10 +65,17 @@ export async function startProxy(
   );
 
   return new Promise((resolve, reject) => {
-    const server = app.listen(port, async () => {
-      console.log(`Proxy server running on port ${port}`);
-      console.log(`Proxying requests to: ${targetUrl}`);
+    const server = app.listen(input.port, async () => {
+      console.log(`Proxy server running on port ${input.port}`);
+      console.log(`Proxying requests to: ${input.targetUrl}`);
       console.log(`Intercepting: /.well-known/agent-card.json`);
+
+      if (input.autoRegister) {
+        await registerToPlatform(
+          input.platformUrl,
+          `http://localhost:${input.port}`
+        );
+      }
 
       resolve();
     });

@@ -1,6 +1,9 @@
-interface Config {
-    requiredVariables: string[];
-}
-export declare function startProxy(port: number, targetUrl: string, config: Config): Promise<void>;
-export {};
+import { CustomAgentDetail } from "./validations/custom-agent-detail-schema";
+import { CliInput } from "./validations/cli-config";
+export declare function startProxy(input: Pick<CliInput, "autoRegister" | "port"> & {
+    platformUrl: string;
+    targetUrl: string;
+} & Partial<{
+    customData: CustomAgentDetail;
+}>): Promise<void>;
 //# sourceMappingURL=server.d.ts.map

@@ -7,52 +7,20 @@ exports.startProxy = startProxy;
 const express_1 = __importDefault(require("express"));
 const http_proxy_middleware_1 = require("http-proxy-middleware");
 const node_fetch_1 = __importDefault(require("node-fetch"));
-// Identity function for JSON modification (returns original data)
-function identityFunction(config, data, port) {
-    return {
-        ...data,
-        capabilities: {
-            ...data.capabilities,
-            extensions: [
-                {
-                    uri: "https://a2a-extensions.beeai.dev/ui/agent-detail/v1",
-                    required: false,
-                    params: {
-                        author: null,
-                        container_image_url: null,
-                        contributors: [],
-                        framework: null,
-                        interaction_mode: "multi-turn",
-                        variables: [
-                            ...config.requiredVariables.map((variable) => ({
-                                name: variable,
-                                description: variable,
-                                required: true,
-                            })),
-                        ],
-                    },
-                },
-            ],
-        },
-        url: `http://localhost:${port}/`,
-    };
-}
-// Main function to start the proxy server
-async function startProxy(port, targetUrl, config) {
+const register_to_platform_1 = require("./core/register-to-platform");
+const intercept_agent_card_1 = require("./core/intercept-agent-card");
+async function startProxy(input) {
     const app = (0, express_1.default)();
-    // Middleware for parsing JSON
     app.use(express_1.default.json());
-    // Intercept /.well-known/agent.json endpoint
     app.get("/.well-known/agent-card.json", async (req, res) => {
         try {
-            console.log("Intercepting /.well-known/agent-card.json request");
-            // Fetch the original response from target backend with timeout and retry
-            const targetEndpointUrl = `${targetUrl}${req.originalUrl}`;
-            console.log(`Fetching from: ${targetEndpointUrl}`);
+            console.debug("Intercepting /.well-known/agent-card.json request");
+            const targetEndpointUrl = `${input.targetUrl}${req.originalUrl}`;
+            console.debug(`Fetching from: ${targetEndpointUrl}`);
             const response = await (0, node_fetch_1.default)(targetEndpointUrl, {
-                timeout: 10000, // 10 second timeout
+                timeout: 10000,
                 headers: {
-                    Connection: "close", // Force new connection
+                    Connection: "close",
                 },
             });
             if (!response.ok) {
@@ -61,21 +29,18 @@ async function startProxy(port, targetUrl, config) {
                     .status(response.status)
                     .json({ error: "Failed to fetch from target" });
             }
-            // Parse the JSON response
             const originalData = await response.json();
-            // Apply identity function (modify this function to change the JSON)
-            const modifiedData = identityFunction(config, originalData, port);
-            // Return the modified JSON
+            const modifiedData = (0, intercept_agent_card_1.interceptAgentCard)(originalData, input.port, input.customData);
             res.json(modifiedData);
         }
         catch (error) {
             console.error("Error processing /.well-known/agent.json:", error);
-            console.error("Target URL was:", `${targetUrl}${req.originalUrl}`);
+            console.error("Target URL was:", `${input.targetUrl}${req.originalUrl}`);
             res.status(500).json({ error: "Internal server error" });
         }
     });
     app.use("/", (0, http_proxy_middleware_1.createProxyMiddleware)({
-        target: targetUrl,
+        target: input.targetUrl,
         changeOrigin: true,
         onError: (err, req, res) => {
             console.error("Proxy error:", err);
@@ -83,10 +48,13 @@ async function startProxy(port, targetUrl, config) {
         },
     }));
     return new Promise((resolve, reject) => {
-        const server = app.listen(port, async () => {
-            console.log(`Proxy server running on port ${port}`);
-            console.log(`Proxying requests to: ${targetUrl}`);
+        const server = app.listen(input.port, async () => {
+            console.log(`Proxy server running on port ${input.port}`);
+            console.log(`Proxying requests to: ${input.targetUrl}`);
             console.log(`Intercepting: /.well-known/agent-card.json`);
+            if (input.autoRegister) {
+                await (0, register_to_platform_1.registerToPlatform)(input.platformUrl, `http://localhost:${input.port}`);
+            }
             resolve();
         });
         server.on("error", (error) => {

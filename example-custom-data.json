@@ -1,0 +1,23 @@
+{
+  "author": {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "url": "https://example.com/john-doe"
+  },
+  "tools": [
+    {
+      "name": "Google Search",
+      "description": "Search the web for information"
+    }
+  ],
+  "container_image_url": "https://example.com/my-agent-image:latest",
+  "contributors": [
+    {
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "url": "https://example.com/jane-smith"
+    }
+  ],
+  "framework": "LangChain",
+  "interaction_mode": "multi-turn"
+}
