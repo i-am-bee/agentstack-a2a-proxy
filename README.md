@@ -1,6 +1,6 @@
 # BeeAI A2A Proxy
 
-A proxy server for BeeAI A2A (Agent-to-Agent) communication that intercepts and modifies agent card endpoints to enable seamless integration with the BeeAI platform.
+A proxy server for BeeAI A2A (Agent-to-Agent) communication that intercepts and modifies agent card endpoints to enable seamless integration with the BeeAI platform. You can literally take existing A2A agent and plug it into BeeAI without changing code of your A2A agent.
 
 ## Main Goal
 
