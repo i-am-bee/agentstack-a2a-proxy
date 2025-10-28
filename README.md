@@ -30,9 +30,7 @@ npx tomkis/beeai-a2a-proxy start http://localhost:8080
 
 Your agent is now live in BeeAI Platform at `http://127.0.0.1:8333` 🎉
 
-## Configuration
-
-### Basic Examples
+## Optional Configuration
 
 **Use a different proxy port:**
 ```bash
