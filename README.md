@@ -1,62 +1,67 @@
 # BeeAI A2A Proxy
 
-A proxy server for [BeeAI](https://docs.beeai.dev/introduction/welcome) A2A (Agent-to-Agent) communication that intercepts and modifies agent card endpoints to enable seamless integration with the BeeAI platform. You can literally take existing A2A agent and plug it into BeeAI without changing code of your A2A agent.
+A zero-configuration bridge that connects any A2A agent to the BeeAI platform—no code changes required.
 
-## Main Goal
+## What It Does
 
-The primary purpose of this proxy is to create a bridge between any A2A client and the BeeAI platform by:
+This proxy lets you plug an existing A2A agent into the BeeAI Platform instantly by:
 
-- **Intercepting agent card requests**: The proxy captures `/.well-known/agent-card.json` requests from any A2A client
-- **Adding AgentDetail extension**: It automatically injects the necessary [AgentDetail](https://docs.beeai.dev/build-agents/agent-details) extension data that enables the agent to be used within the BeeAI ecosystem. The extension is populated with sensible defaults, but can be customized by providing a custom JSON file
-- **Auto-registration**: The proxy automatically registers the modified agent with the BeeAI platform, making it immediately available for use
+1. **Intercepting agent card requests** – Captures calls to `/.well-known/agent-card.json`
+2. **Injecting BeeAI metadata** – Adds the [Agent Details extension](https://docs.beeai.dev/build-agents/agent-details) required by the BeeAI Platform
+3. **Auto-registering your agent** – Makes it immediately available in the BeeAI Platform interface
 
-This allows any A2A-compliant agent to seamlessly work with BeeAI without requiring modifications to the original agent implementation.
+**Result**: Your A2A agent works in BeeAI Platform without touching your agent's code.
 
-## Installation
+## Quickstart
 
-```bash
-npx tomkis/beeai-a2a-proxy
-```
+### Prerequisites
 
-## Usage
+- A running A2A agent (e.g., at `http://localhost:8080`)
+- Node.js installed
+- BeeAI Platform running (default: `http://127.0.0.1:8333`)
 
-### Step-by-step process
+### Connect Your Agent
 
-1. **Start your A2A agent** and note its URL (e.g., `http://localhost:8080`)
-2. **Start the proxy** pointing to your agent:
-   ```bash
-   npx tomkis/beeai-a2a-proxy start http://localhost:8080
-   ```
-
-### Examples
-
-**Basic usage:**
+1. Start your A2A agent and note its URL (e.g., `http://localhost:8080`)
+2. Run the proxy pointing to your agent:
 ```bash
 npx tomkis/beeai-a2a-proxy start http://localhost:8080
 ```
 
-**With custom proxy port:**
+Your agent is now live in BeeAI Platform at `http://127.0.0.1:8333` 🎉
+
+## Optional Configuration
+
+**Use a different proxy port:**
 ```bash
 npx tomkis/beeai-a2a-proxy start http://localhost:8080 --port 4000
 ```
 
-**Disable auto-registration:**
-```bash
-npx tomkis/beeai-a2a-proxy start http://localhost:8080 --auto-register false
-```
-
-**With custom platform URL:**
+**Point to a custom BeeAI platform URL:**
 ```bash
 npx tomkis/beeai-a2a-proxy start http://localhost:8080 --platform-url http://localhost:9000
 ```
 
-**With custom agent detail data:**
+**Skip auto-registration (manual registration only):**
+```bash
+npx tomkis/beeai-a2a-proxy start http://localhost:8080 --auto-register false
+```
+
+**Provide custom agent metadata:**
 ```bash
 npx tomkis/beeai-a2a-proxy start http://localhost:8080 --custom-data ./my-agent-details.json
 ```
 
-### Available options
-- `--port, -p`: Port to run the proxy server on (default: 8000)
-- `--auto-register, -a`: Enable/disable auto-registration with the BeeAI platform (default: true)
-- `--platform-url, -P`: Platform URL to register with (default: http://127.0.0.1:8333)
-- `--custom-data, -c`: Path to custom agent detail JSON file
+### All Options
+
+| Option | Alias | Description | Default |
+|--------|-------|-------------|---------|
+| `--port` | `-p` | Proxy server port | `8000` |
+| `--auto-register` | `-a` | Auto-register with BeeAI | `true` |
+| `--platform-url` | `-P` | BeeAI platform URL | `http://127.0.0.1:8333` |
+| `--custom-data` | `-c` | Custom AgentDetail JSON file | (uses defaults) |
+
+## Limitations
+
+- **Development only** – The proxy is for local testing. For production, add the AgentDetail extension directly to your agent's code.
+- **Supported protocols** – Works with `jsonrpc` and `http_json` transport protocols.
