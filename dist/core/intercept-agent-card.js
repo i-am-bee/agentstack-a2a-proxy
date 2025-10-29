@@ -1,9 +1,8 @@
+"use strict";
 /**
- * Copyright 2025 © Agent Stack a Series of LF Projects, LLC
+ * Copyright 2025 © BeeAI a Series of LF Projects, LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-
-"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.interceptAgentCard = void 0;
 const interceptAgentCard = (originalData, port, customData) => {
