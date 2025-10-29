@@ -65,3 +65,7 @@ npx i-am-bee/agentstack-a2a-proxyy start http://localhost:8080 --custom-data ./m
 
 - **Development only** – The proxy is for local testing. For production, add the AgentDetail extension directly to your agent's code.
 - **Supported protocols** – Works with `jsonrpc` and `http_json` transport protocols.
+
+---
+
+Developed by contributors to the BeeAI project, this initiative is part of the [Linux Foundation AI & Data program](https://lfaidata.foundation/projects/). Its development follows open, collaborative, and community-driven practices.
