@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 © Agent Stack a Series of LF Projects, LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import express from "express";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import fetch from "node-fetch";

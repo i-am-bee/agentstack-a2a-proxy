@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 © Agent Stack a Series of LF Projects, LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerToPlatform = registerToPlatform;

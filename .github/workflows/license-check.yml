@@ -1,0 +1,40 @@
+name: License Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+        
+    - name: Install addlicense
+      run: go install github.com/google/addlicense@latest
+      
+    - name: Install fd
+      run: |
+        wget https://github.com/sharkdp/fd/releases/download/v8.7.1/fd_8.7.1_amd64.deb
+        sudo dpkg -i fd_8.7.1_amd64.deb
+        
+    - name: Add Go bin to PATH
+      run: echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+      
+    - name: Install dependencies
+      run: pnpm install
+      
+    - name: Check license headers
+      run: pnpm run check-license

@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 © Agent Stack a Series of LF Projects, LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.interceptAgentCard = void 0;
@@ -22,7 +27,7 @@ const interceptAgentCard = (originalData, port, customData) => {
             ...originalData.capabilities,
             extensions: [
                 {
-                    uri: "https://a2a-extensions.beeai.dev/ui/agent-detail/v1",
+                    uri: "https://a2a-extensions.agentstack.dev/ui/agent-detail/v1",
                     required: false,
                     params: mergedParams,
                 },

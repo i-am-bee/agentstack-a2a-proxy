@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+/**
+ * Copyright 2025 © Agent Stack a Series of LF Projects, LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 
 import { Command } from "commander";
 import { startProxy } from "./server";
@@ -8,7 +13,10 @@ import { cliInputSchema } from "./validations/cli-config";
 
 const program = new Command();
 
-program.name("beeai-a2a-proxy").description("BeeAI A2A Proxy").version("1.0.0");
+program
+  .name("agentstack-a2a-proxy")
+  .description("Agent Stack A2A Proxy")
+  .version("1.0.0");
 
 program
   .command("start <target>")
