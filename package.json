@@ -9,8 +9,8 @@
     "build": "tsc",
     "cli": "tsx src/cli.ts",
     "clean": "rm -rf dist",
-    "check-license": "addlicense -check -l apache -s=only -c '© Agent Stack a Series of LF Projects, LLC' $(fd '\\.([jt]s)$')",
-    "fix-license": "addlicense -l apache -s=only -c '© Agent Stack a Series of LF Projects, LLC' $(fd '\\.([jt]s)$')"
+    "check-license": "addlicense -check -l apache -s=only -c '© Agent Stack a Series of LF Projects, LLC' 'src/**/*.ts' 'src/**/*.js'",
+    "fix-license": "addlicense -l apache -s=only -c '© Agent Stack a Series of LF Projects, LLC' 'src/**/*.ts' 'src/**/*.js'"
   },
   "author": "",
   "dependencies": {
