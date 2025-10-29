@@ -10,7 +10,10 @@ const zod_1 = __importDefault(require("zod"));
 const load_custom_agent_detail_1 = require("./input/load-custom-agent-detail");
 const cli_config_1 = require("./validations/cli-config");
 const program = new commander_1.Command();
-program.name("beeai-a2a-proxy").description("BeeAI A2A Proxy").version("1.0.0");
+program
+    .name("agentstack-a2a-proxy")
+    .description("Agent Stack A2A Proxy")
+    .version("1.0.0");
 program
     .command("start <target>")
     .description("Start the proxy server")

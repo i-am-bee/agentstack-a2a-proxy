@@ -8,7 +8,10 @@ import { cliInputSchema } from "./validations/cli-config";
 
 const program = new Command();
 
-program.name("beeai-a2a-proxy").description("BeeAI A2A Proxy").version("1.0.0");
+program
+  .name("agentstack-a2a-proxy")
+  .description("Agent Stack A2A Proxy")
+  .version("1.0.0");
 
 program
   .command("start <target>")

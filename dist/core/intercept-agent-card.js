@@ -22,7 +22,7 @@ const interceptAgentCard = (originalData, port, customData) => {
             ...originalData.capabilities,
             extensions: [
                 {
-                    uri: "https://a2a-extensions.beeai.dev/ui/agent-detail/v1",
+                    uri: "https://a2a-extensions.agentstack.dev/ui/agent-detail/v1",
                     required: false,
                     params: mergedParams,
                 },
