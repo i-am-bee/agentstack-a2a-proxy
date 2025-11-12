@@ -5,6 +5,7 @@
 import z from "zod";
 export declare const cliInputSchema: z.ZodObject<{
     platformUrl: z.ZodDefault<z.ZodOptional<z.ZodString>>;
+    selfRegistrationId: z.ZodDefault<z.ZodOptional<z.ZodString>>;
     autoRegister: z.ZodDefault<z.ZodOptional<z.ZodPipe<z.ZodString, z.ZodTransform<boolean, string>>>>;
     port: z.ZodDefault<z.ZodOptional<z.ZodPipe<z.ZodString, z.ZodTransform<number, string>>>>;
     customData: z.ZodOptional<z.ZodString>;

@@ -5,7 +5,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.interceptAgentCard = void 0;
-const interceptAgentCard = (originalData, port, customData) => {
+const interceptAgentCard = (originalData, port, selfRegistrationId, customData) => {
     const defaultParams = {
         author: null,
         container_image_url: null,
@@ -29,6 +29,13 @@ const interceptAgentCard = (originalData, port, customData) => {
                     uri: "https://a2a-extensions.agentstack.beeai.dev/ui/agent-detail/v1",
                     required: false,
                     params: mergedParams,
+                },
+                {
+                    uri: "https://a2a-extensions.agentstack.beeai.dev/services/platform-self-registration/v1",
+                    required: false,
+                    params: {
+                        self_registration_id: selfRegistrationId,
+                    },
                 },
             ],
         },
