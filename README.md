@@ -52,6 +52,7 @@ npx i-am-bee/agentstack-a2a-proxy start http://localhost:8080 --auto-register fa
 npx i-am-bee/agentstack-a2a-proxyy start http://localhost:8080 --custom-data ./my-agent-details.json
 ```
 
+
 ### All Options
 
 | Option | Alias | Description | Default |
@@ -60,6 +61,8 @@ npx i-am-bee/agentstack-a2a-proxyy start http://localhost:8080 --custom-data ./m
 | `--auto-register` | `-a` | Auto-register with Agent Stack | `true` |
 | `--platform-url` | `-P` | Agent Stack URL | `http://127.0.0.1:8333` |
 | `--custom-data` | `-c` | Custom AgentDetail JSON file | (uses defaults) |
+| `--self-registration-id` | `-s` | Self registration ID to use for registration | `a2a-proxy-agent` |
+
 
 ## Limitations
 

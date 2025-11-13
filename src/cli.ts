@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-
 import { Command } from "commander";
 import { startProxy } from "./server";
 import z from "zod";
@@ -21,6 +20,10 @@ program
 program
   .command("start <target>")
   .description("Start the proxy server")
+  .option(
+    "-s, --self-registration-id <selfRegistrationId>",
+    "Self registration ID to use for registration (default: a2a-proxy-agent)"
+  )
   .option(
     "-a --auto-register <autoRegister>",
     "Register with the provider API",
@@ -51,6 +54,7 @@ program
         targetUrl: parsedTarget,
         platformUrl: parsedInput.platformUrl,
         customData,
+        selfRegistrationId: parsedInput.selfRegistrationId,
       });
     } catch (error) {
       console.error("Failed to start proxy server:", error);

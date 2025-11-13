@@ -7,6 +7,7 @@ import z from "zod";
 
 export const cliInputSchema = z.object({
   platformUrl: z.string().optional().default("http://127.0.0.1:8333"),
+  selfRegistrationId: z.string().optional().default("a2a-proxy-agent"),
   autoRegister: z
     .string()
     .transform((val) => {

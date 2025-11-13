@@ -8,6 +8,7 @@ import { CustomAgentDetail } from "../validations/custom-agent-detail-schema";
 export const interceptAgentCard = (
   originalData: any,
   port: number,
+  selfRegistrationId: string,
   customData?: CustomAgentDetail
 ) => {
   const defaultParams = {
@@ -35,6 +36,13 @@ export const interceptAgentCard = (
           uri: "https://a2a-extensions.agentstack.beeai.dev/ui/agent-detail/v1",
           required: false,
           params: mergedParams,
+        },
+        {
+          uri: "https://a2a-extensions.agentstack.beeai.dev/services/platform-self-registration/v1",
+          required: false,
+          params: {
+            self_registration_id: selfRegistrationId,
+          },
         },
       ],
     },

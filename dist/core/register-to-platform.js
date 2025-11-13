@@ -5,15 +5,26 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerToPlatform = registerToPlatform;
-async function registerToPlatform(platformUrl, targetUrl) {
+async function registerToPlatform(platformUrl, targetUrl, selfRegistrationId) {
     console.log(`Attempt to register ${targetUrl} to ${platformUrl}`);
-    const response = await fetch(`${platformUrl}/api/v1/providers?auto_remove=true`, {
+    const allProviders = await fetch(`${platformUrl}/api/v1/providers`);
+    if (!allProviders.ok) {
+        console.error(await allProviders.text());
+        throw new Error(`Failed to get all providers: ${allProviders.statusText}`);
+    }
+    const allProvidersData = (await allProviders.json());
+    if (allProvidersData.items.length > 0 &&
+        allProvidersData.items.some((item) => item.source.endsWith(`#${selfRegistrationId}`))) {
+        console.log("Agent already registered to the platform.");
+        return;
+    }
+    const response = await fetch(`${platformUrl}/api/v1/providers`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            location: targetUrl,
+            location: `${targetUrl}#${selfRegistrationId}`,
         }),
     });
     if (!response.ok) {

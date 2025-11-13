@@ -21,6 +21,7 @@ program
 program
     .command("start <target>")
     .description("Start the proxy server")
+    .option("-s, --self-registration-id <selfRegistrationId>", "Self registration ID to use for registration (default: a2a-proxy-agent)")
     .option("-a --auto-register <autoRegister>", "Register with the provider API", "true")
     .option("-p, --port <port>", "Port to run the proxy server on (default: 8000)")
     .option("-P, --platform-url <platformUrl>", "Platform URL to register with (default: http://127.0.0.1:8333)")
@@ -39,6 +40,7 @@ program
             targetUrl: parsedTarget,
             platformUrl: parsedInput.platformUrl,
             customData,
+            selfRegistrationId: parsedInput.selfRegistrationId,
         });
     }
     catch (error) {

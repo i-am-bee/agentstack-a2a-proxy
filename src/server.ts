@@ -15,6 +15,7 @@ export async function startProxy(
   input: Pick<CliInput, "autoRegister" | "port"> & {
     platformUrl: string;
     targetUrl: string;
+    selfRegistrationId: string;
   } & Partial<{ customData: CustomAgentDetail }>
 ): Promise<void> {
   const app = express();
@@ -46,6 +47,7 @@ export async function startProxy(
       const modifiedData = interceptAgentCard(
         originalData,
         input.port,
+        input.selfRegistrationId,
         input.customData
       );
 
@@ -78,7 +80,8 @@ export async function startProxy(
       if (input.autoRegister) {
         await registerToPlatform(
           input.platformUrl,
-          `http://localhost:${input.port}`
+          `http://localhost:${input.port}`,
+          input.selfRegistrationId
         );
       }
 

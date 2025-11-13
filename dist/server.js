@@ -34,7 +34,7 @@ async function startProxy(input) {
                     .json({ error: "Failed to fetch from target" });
             }
             const originalData = await response.json();
-            const modifiedData = (0, intercept_agent_card_1.interceptAgentCard)(originalData, input.port, input.customData);
+            const modifiedData = (0, intercept_agent_card_1.interceptAgentCard)(originalData, input.port, input.selfRegistrationId, input.customData);
             res.json(modifiedData);
         }
         catch (error) {
@@ -57,7 +57,7 @@ async function startProxy(input) {
             console.log(`Proxying requests to: ${input.targetUrl}`);
             console.log(`Intercepting: /.well-known/agent-card.json`);
             if (input.autoRegister) {
-                await (0, register_to_platform_1.registerToPlatform)(input.platformUrl, `http://localhost:${input.port}`);
+                await (0, register_to_platform_1.registerToPlatform)(input.platformUrl, `http://localhost:${input.port}`, input.selfRegistrationId);
             }
             resolve();
         });

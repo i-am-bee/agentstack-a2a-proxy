@@ -1,1 +1,1 @@
-{"version":3,"file":"register-to-platform.d.ts","sourceRoot":"","sources":["../../src/core/register-to-platform.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,wBAAsB,kBAAkB,CACtC,WAAW,EAAE,MAAM,EACnB,SAAS,EAAE,MAAM,GAChB,OAAO,CAAC,IAAI,CAAC,CAsBf"}
+{"version":3,"file":"register-to-platform.d.ts","sourceRoot":"","sources":["../../src/core/register-to-platform.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,wBAAsB,kBAAkB,CACtC,WAAW,EAAE,MAAM,EACnB,SAAS,EAAE,MAAM,EACjB,kBAAkB,EAAE,MAAM,GACzB,OAAO,CAAC,IAAI,CAAC,CAmCf"}

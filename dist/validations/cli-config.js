@@ -11,6 +11,7 @@ exports.cliInputSchema = void 0;
 const zod_1 = __importDefault(require("zod"));
 exports.cliInputSchema = zod_1.default.object({
     platformUrl: zod_1.default.string().optional().default("http://127.0.0.1:8333"),
+    selfRegistrationId: zod_1.default.string().optional().default("a2a-proxy-agent"),
     autoRegister: zod_1.default
         .string()
         .transform((val) => {
